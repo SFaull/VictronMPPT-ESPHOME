@@ -1,0 +1,3 @@
+[submodule "components/victron/vedirect-c"]
+	path = components/victron/vedirect-c
+	url = git@github.com:SFaull/vedirect-c.git
