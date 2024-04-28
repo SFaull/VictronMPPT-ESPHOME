@@ -2,6 +2,7 @@
 #include "esphome/core/log.h"
 #include <algorithm>  // std::min
 #include "esphome/core/helpers.h"
+#include "vedirect-c/source/vedparse.h"
 
 namespace esphome {
 namespace victron {
@@ -87,68 +88,62 @@ void VictronComponent::dump_config() {  // NOLINT(google-readability-function-si
 }
 
 void VictronComponent::loop() {
-  const uint32_t now = millis();
-  if ((state_ > 0) && (now - last_transmission_ >= 200)) {
-    // last transmission too long ago. Reset RX index.
-    ESP_LOGW(TAG, "Last transmission too long ago");
-    state_ = 0;
+  static bool first = true;
+
+  if(first) {
+    first = false;
+    // run any init code here. TODO: better way to do this?
+    VEDPARSE_init();
   }
 
+  const uint32_t now = millis();
+  if (now - last_transmission_ >= 200) {
+    // last transmission too long ago. Reset RX index.
+    ESP_LOGW(TAG, "Last transmission too long ago");
+    VEDPARSE_reset();
+  }
+
+  // if no data available, exit
   if (!available())
     return;
 
+  // data available, save timestamp and read data...
   last_transmission_ = now;
   while (available()) {
     uint8_t c;
     read_byte(&c);
-    if (state_ == 0) {
-      if (c == '\r' || c == '\n') {
-        continue;
-      }
-      label_.clear();
-      value_.clear();
-      state_ = 1;
-    }
-    if (state_ == 1) {
-      // Start of a ve.direct hex frame
-      if (c == ':') {
-        state_ = 3;
-        continue;
-      }
-      if (c == '\t') {
-        state_ = 2;
-      } else {
-        label_.push_back(c);
-      }
-      continue;
-    }
-    if (state_ == 2) {
-      if (label_ == "Checksum") {
-        state_ = 0;
-        // The checksum is used as end of frame indicator
+
+    // run byte through the parser, will return true if full frame is avialable
+    bool frameReady = VEDPARSE_process(c);
+
+    if(frameReady) {
+        // get the frame
+        vedframe_t frame;
+        uint32_t result = VEDPARSE_get_frame(&frame);
+
+        // if the frame is valid (has a valid checksum)
+        if(frame.checksum_valid) {
+            // iterate over each property
+            for(uint8_t i = 0; i < frame.property_count; i++) {
+                // grab the property at the current index and set the key/value as the global label/value
+                vedprop_t* pProp = &frame.properties[i];
+                label_ = pProp->key;
+                value_ = pProp->value;
+
+                // process the label and value
+                handle_value_();
+            }
+        }
+
+        // check the timestamps against throttle to decide whether to publish or not
         if (now - this->last_publish_ >= this->throttle_) {
           this->last_publish_ = now;
           this->publishing_ = true;
-        } else {
+        } 
+        else {
           this->publishing_ = false;
         }
-        continue;
       }
-      if (c == '\r' || c == '\n') {
-        if (this->publishing_) {
-          handle_value_();
-        }
-        state_ = 0;
-      } else {
-        value_.push_back(c);
-      }
-    }
-    // Discard ve.direct hex frame
-    if (state_ == 3) {
-      if (c == '\r' || c == '\n') {
-        state_ = 0;
-      }
-    }
   }
 }
 
