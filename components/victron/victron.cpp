@@ -100,7 +100,7 @@ void VictronComponent::loop() {
   if (now - last_transmission_ >= 200) {
     // last transmission too long ago. Reset RX index.
     ESP_LOGW(TAG, "Last transmission too long ago");
-    VEDPARSE_reset();
+    VEDPARSE_init();
   }
 
   // if no data available, exit
