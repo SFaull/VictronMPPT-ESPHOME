@@ -97,7 +97,7 @@ void VictronComponent::loop() {
   }
 
   const uint32_t now = millis();
-  if ((VEDPARSE_get_state() != IDLE) && (now - last_transmission_ >= 200)) {
+  if (VEDPARSE_frame_started() && (now - last_transmission_ >= 200)) {
     // last transmission too long ago. Reset RX index.
     ESP_LOGW(TAG, "Last transmission too long ago");
     VEDPARSE_reset();

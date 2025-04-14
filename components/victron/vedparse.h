@@ -35,7 +35,7 @@ void VEDPARSE_init(void);
 void VEDPARSE_reset(void);
 bool VEDPARSE_process(uint8_t);
 int32_t VEDPARSE_get_frame(vedframe_t* pFrame);
-VEDPARSE_state_e VEDPARSE_get_state(void);
+bool VEDPARSE_frame_started(void);
 
 #ifdef __cplusplus
 }

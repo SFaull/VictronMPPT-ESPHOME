@@ -221,11 +221,11 @@ void VEDPARSE_reset(void)
 }
 
 /**
- * @brief Get the module state
+ * @brief True if parsing a frame
  * 
- * @return VEDPARSE_state_e state
+ * @return bool state
  */
-VEDPARSE_state_e VEDPARSE_get_state(void)
+bool VEDPARSE_frame_started(void)
 {
-    return _internal.state;
+    return _internal.state != IDLE;
 }
