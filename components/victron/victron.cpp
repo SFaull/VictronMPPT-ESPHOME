@@ -2,7 +2,7 @@
 #include "esphome/core/log.h"
 #include <algorithm>  // std::min
 #include "esphome/core/helpers.h"
-#include "vedirect-c/source/vedparse.h"
+#include "vedparse.h"
 
 namespace esphome {
 namespace victron {
