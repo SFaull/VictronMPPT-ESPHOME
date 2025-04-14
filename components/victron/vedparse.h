@@ -8,9 +8,9 @@
 extern "C" {
 #endif
 
-#define VEDPARSE_KEY_LENGTH_MAX     128
-#define VEDPARSE_VALUE_LENGTH_MAX   128
-#define VEDPARSE_PROPS_MAX          128
+#define VEDPARSE_KEY_LENGTH_MAX     64
+#define VEDPARSE_VALUE_LENGTH_MAX   64
+#define VEDPARSE_PROPS_MAX          32
 
 typedef struct 
 {
