@@ -219,3 +219,13 @@ void VEDPARSE_reset(void)
 {
     VEDPARSE_init();
 }
+
+/**
+ * @brief Get the module state
+ * 
+ * @return VEDPARSE_state_e state
+ */
+VEDPARSE_state_e VEDPARSE_get_state(void)
+{
+    return _internal.state;
+}
