@@ -94,7 +94,7 @@ void VictronComponent::loop() {
     VEDPARSE_init();
   }
 
-  #if 0
+
   const uint32_t now = millis();
   if (VEDPARSE_frame_started() && ((now - last_transmission_) >= 200)) {
     // last transmission too long ago. Reset RX index.
@@ -118,7 +118,7 @@ void VictronComponent::loop() {
 
     if(frameReady) {
       ESP_LOGD(TAG, "Frame parsed");
-
+#if 0
       // get the frame
       vedframe_t frame;
       int32_t result = VEDPARSE_get_frame(&frame);
@@ -141,10 +141,9 @@ void VictronComponent::loop() {
       else
         ESP_LOGW(TAG, "Frame has invalid checksum");
 
-
+#endif
     }
   }
-  #endif
 }
 
 static std::string charging_mode_text(int value) {
