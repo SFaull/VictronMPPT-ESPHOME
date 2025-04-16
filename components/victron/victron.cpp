@@ -97,7 +97,7 @@ void VictronComponent::loop() {
   }
 
   const uint32_t now = millis();
-  if (VEDPARSE_frame_started() && (now - last_transmission_ >= 200)) {
+  if (VEDPARSE_frame_started() && ((now - last_transmission_) >= 200)) {
     // last transmission too long ago. Reset RX index.
     ESP_LOGW(TAG, "Last transmission too long ago");
     VEDPARSE_reset();
@@ -117,33 +117,24 @@ void VictronComponent::loop() {
     bool frameReady = VEDPARSE_process(c);
 
     if(frameReady) {
-        // get the frame
-        vedframe_t frame;
-        uint32_t result = VEDPARSE_get_frame(&frame);
+      // get the frame
+      vedframe_t frame;
+      int32_t result = VEDPARSE_get_frame(&frame);
 
-        // if the frame is valid (has a valid checksum)
-        if(frame.checksum_valid) {
-            // iterate over each property
-            for(uint8_t i = 0; i < frame.property_count; i++) {
-                // grab the property at the current index and set the key/value as the global label/value
-                vedprop_t* pProp = &frame.properties[i];
-                label_ = pProp->key;
-                value_ = pProp->value;
+      // if the frame is valid (has a valid checksum)
+      if(frame.checksum_valid) {
+        // iterate over each property
+        for(uint8_t i = 0; i < frame.property_count; i++) {
+            // grab the property at the current index and set the key/value as the global label/value
+            vedprop_t* pProp = &frame.properties[i];
+            label_ = pProp->key;
+            value_ = pProp->value;
 
-                // process the label and value
-                handle_value_();
-            }
-        }
-
-        // check the timestamps against throttle to decide whether to publish or not
-        if (now - this->last_publish_ >= this->throttle_) {
-          this->last_publish_ = now;
-          this->publishing_ = true;
-        } 
-        else {
-          this->publishing_ = false;
+            // process the label and value
+            handle_value_();
         }
       }
+    }
   }
 }
 
