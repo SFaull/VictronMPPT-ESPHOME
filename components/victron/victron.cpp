@@ -93,6 +93,7 @@ void VictronComponent::loop() {
   if(first) {
     first = false;
     // run any init code here. TODO: better way to do this?
+    ESP_LOGD(TAG, "VEDPARSE initialising");
     VEDPARSE_init();
   }
 
@@ -117,12 +118,15 @@ void VictronComponent::loop() {
     bool frameReady = VEDPARSE_process(c);
 
     if(frameReady) {
+      ESP_LOGD(TAG, "Frame parsed");
+
       // get the frame
       vedframe_t frame;
       int32_t result = VEDPARSE_get_frame(&frame);
 
       // if the frame is valid (has a valid checksum)
       if(frame.checksum_valid) {
+        ESP_LOGD(TAG, "Frame has valid checksum");
         // iterate over each property
         for(uint8_t i = 0; i < frame.property_count; i++) {
             // grab the property at the current index and set the key/value as the global label/value
@@ -131,9 +135,12 @@ void VictronComponent::loop() {
             value_ = pProp->value;
 
             // process the label and value
-            handle_value_();
+            if (this->publishing_)
+              handle_value_();
         }
       }
+      else
+        ESP_LOGW(TAG, "Frame has invalid checksum");
     }
   }
 }
