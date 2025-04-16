@@ -88,6 +88,7 @@ void VictronComponent::dump_config() {  // NOLINT(google-readability-function-si
 }
 
 void VictronComponent::loop() {
+#if 0
   static bool first = true;
 
   if(first) {
@@ -120,7 +121,7 @@ void VictronComponent::loop() {
 
     if(frameReady) {
       ESP_LOGD(TAG, "Frame parsed");
-#if 0
+
       // get the frame
       vedframe_t frame;
       int32_t result = VEDPARSE_get_frame(&frame);
@@ -143,9 +144,11 @@ void VictronComponent::loop() {
       else
         ESP_LOGW(TAG, "Frame has invalid checksum");
 
-#endif
+
     }
   }
+
+  #endif
 }
 
 static std::string charging_mode_text(int value) {
