@@ -111,11 +111,11 @@ void VictronComponent::loop() {
   while (available()) {
     uint8_t c;
     read_byte(&c);
-    
-    #if 0
+
     // run byte through the parser, will return true if full frame is avialable
     bool frameReady = VEDPARSE_process(c);
 
+    #if 0
     if(frameReady) {
       ESP_LOGD(TAG, "Frame parsed");
 
@@ -141,7 +141,7 @@ void VictronComponent::loop() {
       else
         ESP_LOGW(TAG, "Frame has invalid checksum");
     }
-#endif
+    #endif
   }
 }
 
