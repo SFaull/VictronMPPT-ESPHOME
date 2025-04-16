@@ -88,16 +88,12 @@ void VictronComponent::dump_config() {  // NOLINT(google-readability-function-si
 }
 
 void VictronComponent::loop() {
-
-  static bool first = true;
-
-  if(first) {
-    first = false;
-    // run any init code here. TODO: better way to do this?
+  if(!initialised) {
+    initialised = true;
     ESP_LOGD(TAG, "VEDPARSE initialising");
     VEDPARSE_init();
   }
-  
+
   #if 0
   const uint32_t now = millis();
   if (VEDPARSE_frame_started() && ((now - last_transmission_) >= 200)) {
