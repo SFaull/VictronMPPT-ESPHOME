@@ -88,7 +88,7 @@ void VictronComponent::dump_config() {  // NOLINT(google-readability-function-si
 }
 
 void VictronComponent::loop() {
-  #if 0
+
   static bool first = true;
 
   if(first) {
@@ -97,7 +97,8 @@ void VictronComponent::loop() {
     ESP_LOGD(TAG, "VEDPARSE initialising");
     VEDPARSE_init();
   }
-
+  
+  #if 0
   const uint32_t now = millis();
   if (VEDPARSE_frame_started() && ((now - last_transmission_) >= 200)) {
     // last transmission too long ago. Reset RX index.
