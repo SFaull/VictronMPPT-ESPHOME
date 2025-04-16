@@ -15,6 +15,9 @@ typedef enum
 
 typedef struct 
 {
+    struct {
+        uint8_t initialised : 1;
+    };
     uint8_t prop_char_index;
     vedframe_t frame;
     vedprop_t prop;
@@ -23,7 +26,7 @@ typedef struct
 } VEDPARSE_data_t;
 
 const char* checksumTagName = "CHECKSUM";
-static VEDPARSE_data_t _internal;
+static VEDPARSE_data_t _internal = {0};
 
 void doAddProperty(vedframe_t*, vedprop_t*);
 bool doIsHexChar(char c);
@@ -66,6 +69,7 @@ bool doIsHexChar(char c) {
 void VEDPARSE_init(void)
 {
     memset(&_internal, 0, sizeof(VEDPARSE_data_t)); // clear any history
+    _internal.initialised = true;
 }
 
 /**
@@ -77,6 +81,10 @@ void VEDPARSE_init(void)
  */
 bool VEDPARSE_process(uint8_t inbyte)
 {
+    // auto init
+    if(!_internal.initialised)
+        VEDPARSE_init();
+
     bool frame_ready = false;
     //printf("State: %d\n", _internal.state);
 
