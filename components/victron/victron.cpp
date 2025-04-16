@@ -88,6 +88,7 @@ void VictronComponent::dump_config() {  // NOLINT(google-readability-function-si
 }
 
 void VictronComponent::loop() {
+  #if 0
   static bool first = true;
 
   if(first) {
@@ -146,6 +147,7 @@ void VictronComponent::loop() {
 
     }
   }
+  #endif
 }
 
 static std::string charging_mode_text(int value) {
