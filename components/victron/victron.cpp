@@ -87,6 +87,7 @@ void VictronComponent::dump_config() {  // NOLINT(google-readability-function-si
 }
 
 void VictronComponent::loop() {
+  #if 0
   const uint32_t now = millis();
   if ((state_ > 0) && (now - last_transmission_ >= 200)) {
     // last transmission too long ago. Reset RX index.
@@ -150,6 +151,7 @@ void VictronComponent::loop() {
       }
     }
   }
+  #endif
 }
 
 static std::string charging_mode_text(int value) {
