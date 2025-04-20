@@ -81,11 +81,12 @@ void VEDPARSE_init(void)
  */
 bool VEDPARSE_process(uint8_t inbyte)
 {
+    bool frame_ready = false;
+#if 0
     // auto init
     if(!_internal.initialised)
         VEDPARSE_init();
-
-    bool frame_ready = false;
+    
     //printf("State: %d\n", _internal.state);
 
     // check for hex records, we will ignore these
@@ -199,7 +200,7 @@ bool VEDPARSE_process(uint8_t inbyte)
         }
         break;
     }
-
+#endif
     return frame_ready;
 }
 
