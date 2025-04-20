@@ -96,7 +96,7 @@ bool VEDPARSE_process(uint8_t inbyte)
     }
 
     // compute the checksum on the fly
-    if (_internal.state != RECORD_HEX) 
+    if (_internal.state != VEDPARSE_STATE_RECORD_HEX) 
     {
         _internal.checksum += inbyte;
     }
