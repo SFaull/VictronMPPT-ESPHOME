@@ -88,19 +88,15 @@ void VictronComponent::dump_config() {  // NOLINT(google-readability-function-si
 }
 
 void VictronComponent::loop() {
-  if(!initialised) {
-    initialised = true;
-    ESP_LOGD(TAG, "VEDPARSE initialising");
-    VEDPARSE_init();
-  }
-
-
   const uint32_t now = millis();
+
+  #if 0
   if (VEDPARSE_frame_started() && ((now - last_transmission_) >= 200)) {
     // last transmission too long ago. Reset RX index.
     ESP_LOGW(TAG, "Last transmission too long ago");
     VEDPARSE_reset();
   }
+  #endif
 
   // if no data available, exit
   if (!available())
