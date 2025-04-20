@@ -89,7 +89,7 @@ void VictronComponent::dump_config() {  // NOLINT(google-readability-function-si
 
 void VictronComponent::loop() {
   const uint32_t now = millis();
-  const uint8_t maxLoops = 64;
+  uint8_t maxLoops = 64;
 
   #if 0
   if (VEDPARSE_frame_started() && ((now - last_transmission_) >= 200)) {
