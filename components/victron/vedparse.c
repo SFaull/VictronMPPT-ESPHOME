@@ -88,7 +88,7 @@ bool VEDPARSE_process(uint8_t inbyte)
         VEDPARSE_init();
     
     //printf("State: %d\n", _internal.state);
-#if 0
+#if 1
     // check for hex records, we will ignore these
     if ( (inbyte == ':') && (_internal.state != VEDPARSE_STATE_CHECKSUM) ) 
     {
